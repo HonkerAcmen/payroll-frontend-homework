@@ -1,6 +1,11 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useEmployee, useUpdateEmployee, useSalaryRecords, useTransferRecords } from "@/api/hooks";
+import {
+  useEmployee,
+  useUpdateEmployee,
+  useSalaryRecords,
+  useTransferRecords,
+} from "@/api/hooks";
 import EmployeeForm from "@/components/EmployeeForm";
 import Link from "next/link";
 import { Employee } from "@/types/api";
@@ -13,9 +18,12 @@ export default function EmployeeDetailPage() {
   const [activeTab, setActiveTab] = useState<TabType>("info");
   const [isEditing, setIsEditing] = useState(false);
 
-  const { data: employee, isLoading: employeeLoading } = useEmployee(employeeId);
-  const { data: salaryRecords, isLoading: salaryLoading } = useSalaryRecords(employeeId);
-  const { data: transferRecords, isLoading: transferLoading } = useTransferRecords(employeeId);
+  const { data: employee, isLoading: employeeLoading } =
+    useEmployee(employeeId);
+  const { data: salaryRecords, isLoading: salaryLoading } =
+    useSalaryRecords(employeeId);
+  const { data: transferRecords, isLoading: transferLoading } =
+    useTransferRecords(employeeId);
   const update = useUpdateEmployee();
 
   const handleUpdate = async (formData: Partial<Employee>) => {
@@ -33,7 +41,7 @@ export default function EmployeeDetailPage() {
       <div className="flex items-center justify-center py-12">
         <div className="flex flex-col items-center">
           <svg
-            className="animate-spin h-8 w-8 text-blue-500 mb-4"
+            className="mb-4 h-8 w-8 animate-spin text-blue-500"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -60,9 +68,9 @@ export default function EmployeeDetailPage() {
 
   if (!employee) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+      <div className="rounded-lg border border-gray-200 bg-white p-12 text-center shadow-sm">
         <svg
-          className="mx-auto h-12 w-12 text-gray-400 mb-4"
+          className="mx-auto mb-4 h-12 w-12 text-gray-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -74,7 +82,7 @@ export default function EmployeeDetailPage() {
             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
           />
         </svg>
-        <p className="text-gray-500 text-lg">员工不存在</p>
+        <p className="text-lg text-gray-500">员工不存在</p>
         <Link
           href="/employees"
           className="mt-4 inline-block text-blue-600 hover:text-blue-700"
@@ -88,15 +96,15 @@ export default function EmployeeDetailPage() {
   return (
     <div>
       {/* 返回按钮和标题 */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
               href="/employees"
-              className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors"
+              className="inline-flex items-center font-medium text-blue-600 transition-colors hover:text-blue-700"
             >
               <svg
-                className="w-5 h-5 mr-2"
+                className="mr-2 h-5 w-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -113,19 +121,19 @@ export default function EmployeeDetailPage() {
             <div className="h-6 w-px bg-gray-300"></div>
             <div>
               <h1 className="text-2xl font-bold text-gray-800">员工详情</h1>
-              <p className="text-sm text-gray-500 mt-1">{employee.name}</p>
+              <p className="mt-1 text-sm text-gray-500">{employee.name}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+      <div className="mb-6 rounded-lg border border-gray-200 bg-white shadow-sm">
         <div className="border-b border-gray-200">
           <div className="flex gap-1 px-6">
             <button
               onClick={() => setActiveTab("info")}
-              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+              className={`border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
                 activeTab === "info"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-600 hover:text-gray-900"
@@ -135,7 +143,7 @@ export default function EmployeeDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab("salary")}
-              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+              className={`border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
                 activeTab === "salary"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-600 hover:text-gray-900"
@@ -145,7 +153,7 @@ export default function EmployeeDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab("transfer")}
-              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+              className={`border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
                 activeTab === "transfer"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-600 hover:text-gray-900"
@@ -161,7 +169,7 @@ export default function EmployeeDetailPage() {
       {activeTab === "info" && (
         <div>
           {isEditing ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
               <EmployeeForm
                 employee={employee}
                 onSubmit={handleUpdate}
@@ -170,15 +178,17 @@ export default function EmployeeDetailPage() {
               />
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex justify-between items-start mb-6">
-                <h2 className="text-lg font-semibold text-gray-800">基本信息</h2>
+            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+              <div className="mb-6 flex items-start justify-between">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  基本信息
+                </h2>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 shadow-md hover:shadow-lg transition-all"
+                  className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 font-medium text-white shadow-md transition-all hover:from-blue-600 hover:to-blue-700 hover:shadow-lg"
                 >
                   <svg
-                    className="w-4 h-4 mr-2"
+                    className="mr-2 h-4 w-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -193,34 +203,56 @@ export default function EmployeeDetailPage() {
                   编辑
                 </button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">ID</label>
-                  <p className="text-lg font-semibold text-gray-900">{employee.id}</p>
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    ID
+                  </label>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {employee.id}
+                  </p>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">姓名</label>
-                  <p className="text-lg font-semibold text-gray-900">{employee.name}</p>
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    姓名
+                  </label>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {employee.name}
+                  </p>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">部门</label>
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    部门
+                  </label>
                   <p className="text-lg">
-                    <span className="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm leading-5 font-semibold text-blue-800">
                       {employee.department}
                     </span>
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">职位</label>
-                  <p className="text-lg font-medium text-gray-900">{employee.position}</p>
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    职位
+                  </label>
+                  <p className="text-lg font-medium text-gray-900">
+                    {employee.position}
+                  </p>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">薪资</label>
-                  <p className="text-lg font-bold text-green-600">¥{employee.salary.toLocaleString()}</p>
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    薪资
+                  </label>
+                  <p className="text-lg font-bold text-green-600">
+                    ¥{employee.salary.toLocaleString()}
+                  </p>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">入职日期</label>
-                  <p className="text-lg font-medium text-gray-900">{employee.hireDate}</p>
+                  <label className="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    入职日期
+                  </label>
+                  <p className="text-lg font-medium text-gray-900">
+                    {employee.hireDate}
+                  </p>
                 </div>
               </div>
             </div>
@@ -232,9 +264,9 @@ export default function EmployeeDetailPage() {
       {activeTab === "salary" && (
         <div>
           {salaryLoading ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+            <div className="rounded-lg border border-gray-200 bg-white p-12 text-center shadow-sm">
               <svg
-                className="animate-spin h-8 w-8 text-blue-500 mx-auto mb-4"
+                className="mx-auto mb-4 h-8 w-8 animate-spin text-blue-500"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -256,27 +288,50 @@ export default function EmployeeDetailPage() {
               <p className="text-gray-500">加载中...</p>
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">月份</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">基本工资</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">奖金</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">扣款</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">合计</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        月份
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        基本工资
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        奖金
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        扣款
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        合计
+                      </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-200 bg-white">
                     {salaryRecords && salaryRecords.length > 0 ? (
                       salaryRecords.map((r) => (
-                        <tr key={r.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{r.month}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">¥{r.baseSalary.toLocaleString()}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">¥{r.bonus.toLocaleString()}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">¥{r.deduction.toLocaleString()}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-600">¥{r.total.toLocaleString()}</td>
+                        <tr
+                          key={r.id}
+                          className="transition-colors hover:bg-gray-50"
+                        >
+                          <td className="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">
+                            {r.month}
+                          </td>
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                            ¥{r.baseSalary.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-green-600">
+                            ¥{r.bonus.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-red-600">
+                            ¥{r.deduction.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 text-sm font-bold whitespace-nowrap text-blue-600">
+                            ¥{r.total.toLocaleString()}
+                          </td>
                         </tr>
                       ))
                     ) : (
@@ -295,7 +350,9 @@ export default function EmployeeDetailPage() {
                               d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
                             />
                           </svg>
-                          <p className="mt-2 text-sm text-gray-500">暂无工资记录</p>
+                          <p className="mt-2 text-sm text-gray-500">
+                            暂无工资记录
+                          </p>
                         </td>
                       </tr>
                     )}
@@ -311,9 +368,9 @@ export default function EmployeeDetailPage() {
       {activeTab === "transfer" && (
         <div>
           {transferLoading ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+            <div className="rounded-lg border border-gray-200 bg-white p-12 text-center shadow-sm">
               <svg
-                className="animate-spin h-8 w-8 text-blue-500 mx-auto mb-4"
+                className="mx-auto mb-4 h-8 w-8 animate-spin text-blue-500"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -335,37 +392,70 @@ export default function EmployeeDetailPage() {
               <p className="text-gray-500">加载中...</p>
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">类型</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">原部门</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">新部门</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">原职位</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">新职位</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">调动日期</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">原因</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">备注</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        类型
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        原部门
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        新部门
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        原职位
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        新职位
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        调动日期
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        原因
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                        备注
+                      </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-200 bg-white">
                     {transferRecords && transferRecords.length > 0 ? (
                       transferRecords.map((r) => (
-                        <tr key={r.id} className="hover:bg-gray-50 transition-colors">
+                        <tr
+                          key={r.id}
+                          className="transition-colors hover:bg-gray-50"
+                        >
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                            <span className="inline-flex rounded-full bg-purple-100 px-2 py-1 text-xs leading-5 font-semibold text-purple-800">
                               {r.type}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{r.fromDepartment || "-"}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{r.toDepartment || "-"}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{r.fromPosition || "-"}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{r.toPosition || "-"}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{r.transferDate}</td>
-                          <td className="px-6 py-4 text-sm text-gray-500">{r.reason || "-"}</td>
-                          <td className="px-6 py-4 text-sm text-gray-500">{r.remark || "-"}</td>
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                            {r.fromDepartment || "-"}
+                          </td>
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                            {r.toDepartment || "-"}
+                          </td>
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                            {r.fromPosition || "-"}
+                          </td>
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                            {r.toPosition || "-"}
+                          </td>
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                            {r.transferDate}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {r.reason || "-"}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {r.remark || "-"}
+                          </td>
                         </tr>
                       ))
                     ) : (
@@ -384,7 +474,9 @@ export default function EmployeeDetailPage() {
                               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                             />
                           </svg>
-                          <p className="mt-2 text-sm text-gray-500">暂无调动记录</p>
+                          <p className="mt-2 text-sm text-gray-500">
+                            暂无调动记录
+                          </p>
                         </td>
                       </tr>
                     )}

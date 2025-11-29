@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { SalaryRecord } from '@/types/api';
+import { useState, useEffect } from "react";
+import { SalaryRecord } from "@/types/api";
 
 interface SalaryFormProps {
   salary?: SalaryRecord;
@@ -8,10 +8,15 @@ interface SalaryFormProps {
   isLoading?: boolean;
 }
 
-export default function SalaryForm({ salary, onSubmit, onCancel, isLoading }: SalaryFormProps) {
+export default function SalaryForm({
+  salary,
+  onSubmit,
+  onCancel,
+  isLoading,
+}: SalaryFormProps) {
   const [form, setForm] = useState<Partial<SalaryRecord>>({
     employeeId: 0,
-    month: '',
+    month: "",
     baseSalary: 0,
     bonus: 0,
     deduction: 0,
@@ -30,7 +35,8 @@ export default function SalaryForm({ salary, onSubmit, onCancel, isLoading }: Sa
   }, [salary]);
 
   // 自动计算合计
-  const total = (form.baseSalary || 0) + (form.bonus || 0) - (form.deduction || 0);
+  const total =
+    (form.baseSalary || 0) + (form.bonus || 0) - (form.deduction || 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,22 +46,24 @@ export default function SalaryForm({ salary, onSubmit, onCancel, isLoading }: Sa
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           员工ID <span className="text-red-500">*</span>
         </label>
         <input
           type="number"
           required
           min="1"
-          className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
           value={form.employeeId}
-          onChange={(e) => setForm({ ...form, employeeId: Number(e.target.value) })}
+          onChange={(e) =>
+            setForm({ ...form, employeeId: Number(e.target.value) })
+          }
           placeholder="请输入员工ID"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           月份 <span className="text-red-500">*</span> (格式: YYYY-MM)
         </label>
         <input
@@ -63,14 +71,14 @@ export default function SalaryForm({ salary, onSubmit, onCancel, isLoading }: Sa
           required
           pattern="\d{4}-\d{2}"
           placeholder="2024-01"
-          className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
           value={form.month}
           onChange={(e) => setForm({ ...form, month: e.target.value })}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           基本工资 <span className="text-red-500">*</span>
         </label>
         <input
@@ -78,20 +86,24 @@ export default function SalaryForm({ salary, onSubmit, onCancel, isLoading }: Sa
           required
           min="0"
           step="0.01"
-          className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
           value={form.baseSalary}
-          onChange={(e) => setForm({ ...form, baseSalary: Number(e.target.value) })}
+          onChange={(e) =>
+            setForm({ ...form, baseSalary: Number(e.target.value) })
+          }
           placeholder="请输入基本工资"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">奖金</label>
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          奖金
+        </label>
         <input
           type="number"
           min="0"
           step="0.01"
-          className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
           value={form.bonus || 0}
           onChange={(e) => setForm({ ...form, bonus: Number(e.target.value) })}
           placeholder="请输入奖金"
@@ -99,43 +111,47 @@ export default function SalaryForm({ salary, onSubmit, onCancel, isLoading }: Sa
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">扣款</label>
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          扣款
+        </label>
         <input
           type="number"
           min="0"
           step="0.01"
-          className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
           value={form.deduction || 0}
-          onChange={(e) => setForm({ ...form, deduction: Number(e.target.value) })}
+          onChange={(e) =>
+            setForm({ ...form, deduction: Number(e.target.value) })
+          }
           placeholder="请输入扣款"
         />
       </div>
 
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-100">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+      <div className="rounded-lg border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-4">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           合计（自动计算）
         </label>
         <p className="text-2xl font-bold text-blue-600">¥{total.toFixed(2)}</p>
       </div>
 
-      <div className="flex gap-3 justify-end pt-6 border-t border-gray-200">
+      <div className="flex justify-end gap-3 border-t border-gray-200 pt-6">
         <button
           type="button"
           onClick={onCancel}
-          className="px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium text-gray-700 transition-colors"
+          className="rounded-lg border border-gray-300 px-6 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50"
           disabled={isLoading}
         >
           取消
         </button>
         <button
           type="submit"
-          className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-2.5 font-medium text-white shadow-md transition-all hover:from-blue-600 hover:to-blue-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
           disabled={isLoading}
         >
           {isLoading ? (
             <span className="flex items-center">
               <svg
-                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                className="mr-2 -ml-1 h-4 w-4 animate-spin text-white"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -166,4 +182,3 @@ export default function SalaryForm({ salary, onSubmit, onCancel, isLoading }: Sa
     </form>
   );
 }
-

@@ -19,4 +19,3 @@ export const removeToken = (): void => {
   if (typeof window === "undefined") return;
   localStorage.removeItem("token");
 };
-

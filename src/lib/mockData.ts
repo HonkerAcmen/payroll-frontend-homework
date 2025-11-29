@@ -102,7 +102,7 @@ export const mockEmployees: Employee[] = [
 
 // 计算应发和实发的辅助函数
 function calculateSalary(
-  salary: Omit<SalaryRecord, "gross" | "net">
+  salary: Omit<SalaryRecord, "gross" | "net">,
 ): SalaryRecord {
   // 应发 = 所有收入项之和 - 病事假扣款
   const gross =

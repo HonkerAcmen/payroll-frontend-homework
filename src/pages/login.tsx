@@ -27,29 +27,31 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
-      <div className="bg-white p-8 shadow-2xl rounded-2xl w-full max-w-md border border-gray-100">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <span className="text-white font-bold text-2xl">H</span>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
+      <div className="w-full max-w-md rounded-2xl border border-gray-100 bg-white p-8 shadow-2xl">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
+            <span className="text-2xl font-bold text-white">员工管理</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">HR 管理系统</h1>
-          <p className="text-gray-500 text-sm">欢迎登录</p>
+          <h1 className="mb-2 text-2xl font-bold text-gray-800">
+            员工管理系统
+          </h1>
+          <p className="text-sm text-gray-500">欢迎登录</p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-4 text-sm animate-shake">
+          <div className="animate-shake mb-4 rounded border-l-4 border-red-500 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
         )}
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               用户名
             </label>
             <input
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="请输入用户名"
               value={form.username}
               onChange={(e) => setForm({ ...form, username: e.target.value })}
@@ -59,11 +61,11 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               密码
             </label>
             <input
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="请输入密码"
               type="password"
               value={form.password}
@@ -76,12 +78,12 @@ export default function Login() {
           <button
             onClick={submit}
             disabled={login.isPending || !form.username || !form.password}
-            className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            className="w-full transform rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 py-3 font-medium text-white shadow-lg transition-all hover:-translate-y-0.5 hover:from-blue-600 hover:to-blue-700 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
           >
             {login.isPending ? (
               <span className="flex items-center justify-center">
                 <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -109,7 +111,7 @@ export default function Login() {
         </div>
 
         <div className="mt-6 text-center text-xs text-gray-500">
-          <p>提示：使用任意用户名和密码即可登录（演示模式）</p>
+          <p>提示：务必管理好自己的信息，规范输入。注册请联系管理员。</p>
         </div>
       </div>
     </div>
