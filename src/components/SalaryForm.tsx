@@ -1,5 +1,14 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { Form, InputNumber, DatePicker, Button, Card, Space } from "antd";
+import {
+  AiOutlineUser,
+  AiOutlineCalendar,
+  AiOutlineMoneyCollect,
+} from "react-icons/ai";
 import { SalaryRecord } from "@/types/api";
+import dayjs from "dayjs";
+
+const { MonthPicker } = DatePicker;
 
 interface SalaryFormProps {
   salary?: SalaryRecord;
@@ -14,19 +23,14 @@ export default function SalaryForm({
   onCancel,
   isLoading,
 }: SalaryFormProps) {
-  const [form, setForm] = useState<Partial<SalaryRecord>>({
-    employeeId: 0,
-    month: "",
-    baseSalary: 0,
-    bonus: 0,
-    deduction: 0,
-  });
+  const [form] = Form.useForm();
 
+  // 编辑时加载初始值
   useEffect(() => {
     if (salary) {
-      setForm({
+      form.setFieldsValue({
         employeeId: salary.employeeId,
-        month: salary.month,
+        month: dayjs(salary.month),
         baseSalary: salary.baseSalary,
         bonus: salary.bonus,
         deduction: salary.deduction,
@@ -35,150 +39,97 @@ export default function SalaryForm({
   }, [salary]);
 
   // 自动计算合计
-  const total =
-    (form.baseSalary || 0) + (form.bonus || 0) - (form.deduction || 0);
+  const computeTotal = () => {
+    const { baseSalary = 0, bonus = 0, deduction = 0 } = form.getFieldsValue();
+    return baseSalary + bonus - deduction;
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({ ...form, total });
+  const handleFinish = (values: any) => {
+    const payload: Partial<SalaryRecord> = {
+      employeeId: values.employeeId,
+      month: values.month ? values.month.format("YYYY-MM") : "",
+      baseSalary: values.baseSalary,
+      bonus: values.bonus,
+      deduction: values.deduction,
+      total: computeTotal(),
+    };
+
+    onSubmit(payload);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          员工ID <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="number"
-          required
-          min="1"
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          value={form.employeeId}
-          onChange={(e) =>
-            setForm({ ...form, employeeId: Number(e.target.value) })
-          }
-          placeholder="请输入员工ID"
-        />
-      </div>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleFinish}
+      initialValues={{
+        employeeId: 0,
+        month: null,
+        baseSalary: 0,
+        bonus: 0,
+        deduction: 0,
+      }}
+    >
+      <Form.Item
+        name="employeeId"
+        label={
+          <Space>
+            <AiOutlineUser />
+            <span>员工 ID</span>
+          </Space>
+        }
+        rules={[{ required: true, message: "请输入员工 ID" }]}
+      >
+        <InputNumber min={1} className="w-full" placeholder="请输入员工 ID" />
+      </Form.Item>
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          月份 <span className="text-red-500">*</span> (格式: YYYY-MM)
-        </label>
-        <input
-          type="text"
-          required
-          pattern="\d{4}-\d{2}"
-          placeholder="2024-01"
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          value={form.month}
-          onChange={(e) => setForm({ ...form, month: e.target.value })}
-        />
-      </div>
+      <Form.Item
+        name="month"
+        label={
+          <Space>
+            <AiOutlineCalendar />
+            <span>月份（YYYY-MM）</span>
+          </Space>
+        }
+        rules={[{ required: true, message: "请选择月份" }]}
+      >
+        <MonthPicker className="w-full" placeholder="请选择月份" />
+      </Form.Item>
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          基本工资 <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="number"
-          required
-          min="0"
-          step="0.01"
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          value={form.baseSalary}
-          onChange={(e) =>
-            setForm({ ...form, baseSalary: Number(e.target.value) })
-          }
-          placeholder="请输入基本工资"
-        />
-      </div>
+      <Form.Item
+        name="baseSalary"
+        label={
+          <Space>
+            <AiOutlineMoneyCollect />
+            <span>基本工资</span>
+          </Space>
+        }
+        rules={[{ required: true, message: "请输入基本工资" }]}
+      >
+        <InputNumber min={0} className="w-full" step={0.01} />
+      </Form.Item>
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          奖金
-        </label>
-        <input
-          type="number"
-          min="0"
-          step="0.01"
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          value={form.bonus || 0}
-          onChange={(e) => setForm({ ...form, bonus: Number(e.target.value) })}
-          placeholder="请输入奖金"
-        />
-      </div>
+      <Form.Item name="bonus" label="奖金">
+        <InputNumber min={0} className="w-full" step={0.01} />
+      </Form.Item>
 
-      <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          扣款
-        </label>
-        <input
-          type="number"
-          min="0"
-          step="0.01"
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 transition-all focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          value={form.deduction || 0}
-          onChange={(e) =>
-            setForm({ ...form, deduction: Number(e.target.value) })
-          }
-          placeholder="请输入扣款"
-        />
-      </div>
+      <Form.Item name="deduction" label="扣款">
+        <InputNumber min={0} className="w-full" step={0.01} />
+      </Form.Item>
 
-      <div className="rounded-lg border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-4">
-        <label className="mb-2 block text-sm font-medium text-gray-700">
-          合计（自动计算）
-        </label>
-        <p className="text-2xl font-bold text-blue-600">¥{total.toFixed(2)}</p>
-      </div>
+      {/* 合计卡片 */}
+      <Card className="mt-2" size="small" title="合计（自动计算）">
+        <div className="text-2xl font-bold text-blue-600">
+          ¥{computeTotal().toFixed(2)}
+        </div>
+      </Card>
 
-      <div className="flex justify-end gap-3 border-t border-gray-200 pt-6">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="rounded-lg border border-gray-300 px-6 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50"
-          disabled={isLoading}
-        >
-          取消
-        </button>
-        <button
-          type="submit"
-          className="rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-2.5 font-medium text-white shadow-md transition-all hover:from-blue-600 hover:to-blue-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <span className="flex items-center">
-              <svg
-                className="mr-2 -ml-1 h-4 w-4 animate-spin text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              提交中...
-            </span>
-          ) : salary ? (
-            "更新"
-          ) : (
-            "创建"
-          )}
-        </button>
+      <div className="flex justify-end mt-6 gap-3">
+        <Button onClick={onCancel}>取消</Button>
+        <Button type="primary" htmlType="submit" loading={isLoading}>
+          {salary ? "更新" : "创建"}
+        </Button>
       </div>
-    </form>
+    </Form>
   );
 }

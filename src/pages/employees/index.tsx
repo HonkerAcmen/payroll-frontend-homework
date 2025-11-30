@@ -115,8 +115,8 @@ export default function EmployeePage() {
   ];
 
   return (
-    <div className="p-6  min-h-190 ">
-      <div className="flex justify-between items-center mb-4">
+    <div className="  min-h-190 ">
+      <div className="flex justify-between items-center mb-4 border border-gray-200 px-4 py-6 rounded-lg">
         <h1 className="text-2xl font-bold text-gray-800">员工管理</h1>
         <Button
           type="primary"
