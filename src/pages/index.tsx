@@ -18,6 +18,9 @@ import {
   AiOutlineTeam,
 } from "react-icons/ai";
 import dayjs from "dayjs";
+import DeptSalaryChart from "./_components/DeptSalaryChart";
+import DeptCountPieChart from "./_components/DeptCountPieChart";
+import SalaryComparisonChart from "./_components/SalaryComparisonChart";
 
 const { Option } = Select;
 
@@ -101,7 +104,7 @@ export default function Home() {
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 border border-gray-200 px-4 py-6 rounded-lg">
         <div>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <AiFillHome className="text-blue-500" />
+            <AiFillHome className="text-gray-600" />
             系统概览
           </h1>
           <p className="text-gray-500 mt-1">查看系统统计数据和部门汇总</p>
@@ -175,6 +178,28 @@ export default function Home() {
               precision={2}
               valueStyle={{ color: "#1890ff" }}
               loading={summaryLoading}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* 图表区域 */}
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={12}>
+          <Card>
+            <DeptSalaryChart data={deptStats || []} loading={deptLoading} />
+          </Card>
+        </Col>
+        <Col xs={24} lg={12}>
+          <Card>
+            <DeptCountPieChart data={deptStats || []} loading={deptLoading} />
+          </Card>
+        </Col>
+        <Col xs={24}>
+          <Card>
+            <SalaryComparisonChart
+              data={deptStats || []}
+              loading={deptLoading}
             />
           </Card>
         </Col>
