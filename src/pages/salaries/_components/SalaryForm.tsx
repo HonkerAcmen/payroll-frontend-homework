@@ -1,10 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Form,
   InputNumber,
   DatePicker,
   Button,
-  Card,
   Space,
   Input,
   Select,
@@ -38,7 +37,6 @@ interface SalaryItems {
   formfields: keyof SalaryRecord;
 }
 
-// 🔥 根据 SalaryRecord 生成你的字段
 const formItems: SalaryItems[] = [
   {
     title: "年份",
@@ -164,6 +162,9 @@ export default function SalaryForm({
   isLoading,
 }: SalaryFormProps) {
   const [form] = Form.useForm();
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
 
   // 编辑模式
   useEffect(() => {
@@ -172,8 +173,28 @@ export default function SalaryForm({
         ...salary,
         emp_no: salary.Employee?.emp_no,
       });
+      // 编辑模式下，如果有员工信息，设置选中的员工
+      if (salary.Employee) {
+        setSelectedEmployee(salary.Employee);
+      }
     }
   }, [salary, form]);
+
+  // 监听员工选择变化，自动填充基本工资（仅创建模式）
+  const handleEmployeeChange = (empNo: string) => {
+    const employee = employees.find((emp) => emp.emp_no === empNo);
+    if (employee) {
+      setSelectedEmployee(employee);
+      // 只有在创建模式下（没有 salary）才自动填充基本工资
+      if (!salary) {
+        form.setFieldsValue({
+          base_salary: employee.base_salary,
+        });
+      }
+    } else {
+      setSelectedEmployee(null);
+    }
+  };
 
   // 自动计算 gross / net
   const computeGross = () => {
@@ -234,6 +255,7 @@ export default function SalaryForm({
         <Select
           placeholder="请选择员工"
           showSearch
+          onChange={handleEmployeeChange}
           filterOption={(input, option) =>
             (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
           }
@@ -244,38 +266,56 @@ export default function SalaryForm({
         />
       </Form.Item>
 
-      {formItems.map((item) => (
-        <Form.Item
-          key={item.formfields}
-          name={item.formfields}
-          label={item.title}
-          rules={[
-            {
-              required: item.required,
-              message: item.alertMessage,
-            },
-          ]}
-        >
-          {item.type === "number" ? (
-            <InputNumber
-              style={{ width: "100%" }}
-              min={0}
-              step={0.01}
-              placeholder={item.placeholder}
-            />
-          ) : item.type === "month" ? (
-            <MonthPicker className="w-full" placeholder={item.placeholder} />
-          ) : (
-            <Input placeholder={item.placeholder} />
-          )}
-        </Form.Item>
-      ))}
+      {formItems.map((item) => {
+        // 基本工资字段特殊处理：从员工信息读取，只读
+        const isBaseSalary = item.formfields === "base_salary";
+        const isYearOrMonth =
+          item.formfields === "year" || item.formfields === "month";
+        // 判断是否有选中的员工（创建模式）或已有员工信息（编辑模式）
+        const hasEmployeeInfo =
+          selectedEmployee || (salary?.Employee && isBaseSalary);
 
-      {/* 自动计算显示 */}
-      <Card className="mt-3" size="small" title="自动计算结果">
-        <div className="text-lg">应发工资（Gross）：{computeGross()}</div>
-        <div className="text-lg">实发工资（Net）：{computeNet()}</div>
-      </Card>
+        return (
+          <Form.Item
+            key={item.formfields}
+            name={item.formfields}
+            label={item.title}
+            rules={[
+              {
+                required: item.required,
+                message: item.alertMessage,
+              },
+            ]}
+          >
+            {item.type === "number" ? (
+              <InputNumber
+                style={{ width: "100%" }}
+                min={0}
+                step={isYearOrMonth ? 1 : 0.01}
+                precision={isYearOrMonth ? 0 : 2}
+                parser={(value) => {
+                  if (isYearOrMonth) {
+                    const num = value?.replace(/\D/g, "");
+                    return num ? Number(num) : 0;
+                  }
+                  return value ? Number(value) : 0;
+                }}
+                placeholder={item.placeholder}
+                disabled={isBaseSalary}
+                addonAfter={
+                  isBaseSalary && hasEmployeeInfo
+                    ? "（来自员工信息）"
+                    : undefined
+                }
+              />
+            ) : item.type === "month" ? (
+              <MonthPicker className="w-full" placeholder={item.placeholder} />
+            ) : (
+              <Input placeholder={item.placeholder} />
+            )}
+          </Form.Item>
+        );
+      })}
 
       <div className="flex justify-end mt-6 gap-3">
         <Button onClick={onCancel}>取消</Button>

@@ -26,6 +26,7 @@ import {
   AiOutlineDelete,
 } from "react-icons/ai";
 import { exportToCSV } from "@/utils/csvExport";
+import { formatDate } from "@/utils/dateFormat";
 
 const { Option } = Select;
 
@@ -239,6 +240,10 @@ export default function SalariesPage() {
         ) {
           const v = (rec as any)[f.key];
           return typeof v === "number" ? `¥${v.toLocaleString()}` : (v ?? "-");
+        }
+        // 日期字段格式化
+        if (f.key === "created_at" || f.key === "updated_at") {
+          return formatDate(val);
         }
         if (f.isMoney && typeof val === "number") {
           return `¥${val.toLocaleString()}`;

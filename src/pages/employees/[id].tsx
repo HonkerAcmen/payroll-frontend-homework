@@ -17,6 +17,7 @@ import {
   AiOutlineEdit,
   AiOutlineSwap,
 } from "react-icons/ai";
+import { formatDate } from "@/utils/dateFormat";
 
 const { TabPane } = Tabs;
 
@@ -186,11 +187,7 @@ export default function EmployeeDetailPage() {
             </div>
             <div>
               <b>入职日期:</b>{" "}
-              {employee.join_date
-                ? new Date(employee.join_date).toLocaleDateString("zh-CN")
-                : employee.created_at
-                  ? new Date(employee.created_at).toLocaleDateString("zh-CN")
-                  : "-"}
+              {formatDate(employee.join_date || employee.created_at)}
             </div>
             <div className="md:col-span-2 flex gap-2">
               <Button
