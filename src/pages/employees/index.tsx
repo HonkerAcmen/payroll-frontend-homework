@@ -8,12 +8,13 @@ import { Table, Input, Select, Button, Modal, Tag, Space, message } from "antd";
 import { Employee } from "@/types/api";
 import { AiFillPlusCircle } from "react-icons/ai";
 import EmployeeForm from "@/pages/employees/_components/EmployeeForm";
+import { DEFAULT_PAGE_SIZE } from "@/constants";
 
 const { Option } = Select;
 
 export default function EmployeePage() {
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(10);
+  const [pageSize] = useState(DEFAULT_PAGE_SIZE);
   const [searchName, setSearchName] = useState("");
   const [filterDepartment, setFilterDepartment] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -56,8 +57,8 @@ export default function EmployeePage() {
           await deleteEmployee.mutateAsync(id);
           message.success("删除成功");
         } catch (error) {
-          message.error("删除失败");
-          console.error(error);
+          // 错误已在全局拦截器中处理
+          console.error("删除员工失败:", error);
         }
       },
     });
@@ -70,8 +71,8 @@ export default function EmployeePage() {
       message.success("创建成功");
       setSearchName(""); // 可选：刷新列表
     } catch (error) {
-      message.error("创建失败");
-      console.error(error);
+      // 错误已在全局拦截器中处理
+      console.error("创建员工失败:", error);
     }
   };
 

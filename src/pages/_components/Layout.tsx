@@ -21,6 +21,7 @@ export default function Layout({ children }: PropsWithChildren) {
   const [collapsed, setCollapsed] = useState(false);
 
   const navLinks = [
+    { key: "/", label: "系统概览", icon: <AiFillHome /> },
     { key: "/employees", label: "员工管理", icon: <AiOutlineUser /> },
     { key: "/salaries", label: "工资管理", icon: <AiOutlineDollar /> },
     { key: "/salary/search", label: "工资筛选", icon: <AiOutlineSearch /> },

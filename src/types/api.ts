@@ -25,7 +25,7 @@ export interface Employee {
 export interface SalaryRecord {
   id: number;
   employee_id: number;
-  employee: Employee;
+  Employee: Employee;
   year: number;
   month: number;
   // 收入项

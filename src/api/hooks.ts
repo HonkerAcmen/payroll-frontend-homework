@@ -269,10 +269,18 @@ export const useDeptStats = (year: number, month: number) => {
     queryKey: ["deptStats", year, month],
     queryFn: async () => {
       // 后端接口：GET /api/stats/dept?year=&month=
-      const res = await api.get<DeptStats[]>("/stats/dept", {
+      // 后端返回格式: {Department, TotalGross, TotalNet, Count}
+      // 前端期望格式: {department, total_gross, total_net, count}
+      const res = await api.get<any[]>("/stats/dept", {
         params: { year, month },
       });
-      return res.data;
+      // 转换字段名
+      return res.data.map((item: any) => ({
+        department: item.Department || item.department,
+        total_gross: item.TotalGross ?? item.total_gross ?? 0,
+        total_net: item.TotalNet ?? item.total_net ?? 0,
+        count: item.Count ?? item.count ?? 0,
+      })) as DeptStats[];
     },
     enabled: !!year && !!month,
   });
@@ -284,10 +292,16 @@ export const useSummaryStats = (year: number, month: number) => {
     queryKey: ["summaryStats", year, month],
     queryFn: async () => {
       // 后端接口：GET /api/stats/summary?year=&month=
-      const res = await api.get<SummaryStats>("/stats/summary", {
+      // 后端可能返回: {TotalGross, TotalNet, Count} 或 {total_gross, total_net, count}
+      const res = await api.get<any>("/stats/summary", {
         params: { year, month },
       });
-      return res.data;
+      // 转换字段名，兼容两种格式
+      return {
+        total_gross: res.data.TotalGross ?? res.data.total_gross ?? 0,
+        total_net: res.data.TotalNet ?? res.data.total_net ?? 0,
+        count: res.data.Count ?? res.data.count ?? 0,
+      } as SummaryStats;
     },
     enabled: !!year && !!month,
   });

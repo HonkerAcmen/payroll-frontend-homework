@@ -5,12 +5,18 @@ import {
   useUpdateEmployee,
   useSalaryRecords,
   useTransferRecords,
+  useTransferEmployee,
 } from "@/api/hooks";
 import EmployeeForm from "@/pages/employees/_components/EmployeeForm";
-import { Tabs, Button, Spin, Table, Tag, message } from "antd";
+import TransferForm from "@/pages/employees/_components/TransferForm";
+import { Tabs, Button, Spin, Table, Tag, message, Modal } from "antd";
 import { Employee } from "@/types/api";
 import Link from "next/link";
-import { AiOutlineArrowLeft, AiOutlineEdit } from "react-icons/ai";
+import {
+  AiOutlineArrowLeft,
+  AiOutlineEdit,
+  AiOutlineSwap,
+} from "react-icons/ai";
 
 const { TabPane } = Tabs;
 
@@ -18,6 +24,7 @@ export default function EmployeeDetailPage() {
   const { id } = useRouter().query;
   const employeeId = Number(id);
   const [isEditing, setIsEditing] = useState(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
 
   const { data: employee, isLoading: employeeLoading } =
     useEmployee(employeeId);
@@ -29,6 +36,7 @@ export default function EmployeeDetailPage() {
     useTransferRecords(employeeId);
 
   const update = useUpdateEmployee();
+  const transfer = useTransferEmployee();
 
   const handleUpdate = async (formData: Partial<Employee>) => {
     if (!employee) return;
@@ -37,8 +45,20 @@ export default function EmployeeDetailPage() {
       setIsEditing(false);
       message.success("更新成功");
     } catch (error) {
-      console.error(error);
-      message.error("更新失败");
+      // 错误已在全局拦截器中处理
+      console.error("更新员工失败:", error);
+    }
+  };
+
+  const handleTransfer = async (formData: any) => {
+    if (!employee) return;
+    try {
+      await transfer.mutateAsync({ id: employee.id, ...formData });
+      setIsTransferModalOpen(false);
+      message.success("调动成功");
+    } catch (error) {
+      // 错误已在全局拦截器中处理
+      console.error("员工调动失败:", error);
     }
   };
 
@@ -62,30 +82,47 @@ export default function EmployeeDetailPage() {
   }
 
   const salaryColumns = [
+    { title: "年份", dataIndex: "year", key: "year" },
     { title: "月份", dataIndex: "month", key: "month" },
     {
       title: "基本工资",
-      dataIndex: "baseSalary",
-      key: "baseSalary",
-      render: (val: number) => `¥${val.toLocaleString()}`,
+      dataIndex: "base_salary",
+      key: "base_salary",
+      render: (val: number) => (val != null ? `¥${val.toLocaleString()}` : "-"),
     },
     {
-      title: "奖金",
-      dataIndex: "bonus",
-      key: "bonus",
-      render: (val: number) => `¥${val.toLocaleString()}`,
+      title: "工龄工资",
+      dataIndex: "work_age_salary",
+      key: "work_age_salary",
+      render: (val: number) => (val != null ? `¥${val.toLocaleString()}` : "-"),
     },
     {
-      title: "扣款",
-      dataIndex: "deduction",
-      key: "deduction",
-      render: (val: number) => `¥${val.toLocaleString()}`,
+      title: "职务津贴",
+      dataIndex: "position_allowance",
+      key: "position_allowance",
+      render: (val: number) => (val != null ? `¥${val.toLocaleString()}` : "-"),
     },
     {
-      title: "合计",
-      dataIndex: "total",
-      key: "total",
-      render: (val: number) => <b>¥{val.toLocaleString()}</b>,
+      title: "应发 (gross)",
+      dataIndex: "gross",
+      key: "gross",
+      render: (val: number) =>
+        val != null ? (
+          <b className="text-green-600">¥{val.toLocaleString()}</b>
+        ) : (
+          "-"
+        ),
+    },
+    {
+      title: "实发 (net)",
+      dataIndex: "net",
+      key: "net",
+      render: (val: number) =>
+        val != null ? (
+          <b className="text-blue-600">¥{val.toLocaleString()}</b>
+        ) : (
+          "-"
+        ),
     },
   ];
 
@@ -149,16 +186,26 @@ export default function EmployeeDetailPage() {
             </div>
             <div>
               <b>入职日期:</b>{" "}
-              {employee.created_at &&
-                new Date(employee.created_at).toISOString().slice(0, 10)}
+              {employee.join_date
+                ? new Date(employee.join_date).toLocaleDateString("zh-CN")
+                : employee.created_at
+                  ? new Date(employee.created_at).toLocaleDateString("zh-CN")
+                  : "-"}
             </div>
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 flex gap-2">
               <Button
                 type="primary"
                 icon={<AiOutlineEdit />}
                 onClick={() => setIsEditing(true)}
               >
                 编辑信息
+              </Button>
+              <Button
+                type="default"
+                icon={<AiOutlineSwap />}
+                onClick={() => setIsTransferModalOpen(true)}
+              >
+                员工调动
               </Button>
             </div>
           </div>
@@ -188,6 +235,23 @@ export default function EmployeeDetailPage() {
           />
         </TabPane>
       </Tabs>
+
+      {/* 调动 Modal */}
+      <Modal
+        title="员工调动"
+        open={isTransferModalOpen}
+        onCancel={() => setIsTransferModalOpen(false)}
+        footer={null}
+      >
+        {employee && (
+          <TransferForm
+            employee={employee}
+            onSubmit={handleTransfer}
+            onCancel={() => setIsTransferModalOpen(false)}
+            isLoading={transfer.isPending}
+          />
+        )}
+      </Modal>
     </div>
   );
 }
