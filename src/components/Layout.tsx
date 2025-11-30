@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useState } from "react";
 import { useRouter } from "next/router";
-import { Layout as AntLayout, Menu, Button } from "antd";
+import { Layout as AntLayout, Menu, Button, Popconfirm } from "antd";
 import {
   AiOutlineUser,
   AiOutlineDollar,
@@ -25,10 +25,8 @@ export default function Layout({ children }: PropsWithChildren) {
   ];
 
   const handleLogout = () => {
-    if (confirm("确定要退出登录吗？")) {
-      removeToken();
-      router.push("/login");
-    }
+    removeToken();
+    router.push("/login");
   };
 
   return (
@@ -72,14 +70,18 @@ export default function Layout({ children }: PropsWithChildren) {
             onClick={() => setCollapsed(!collapsed)}
             icon={collapsed ? <AiOutlineMenuUnfold /> : <AiOutlineMenuFold />}
           />
-          <Button
-            type="primary"
-            danger
-            icon={<AiOutlineLogout />}
-            onClick={handleLogout}
+
+          <Popconfirm
+            title="退出登录"
+            description="确定要退出吗?"
+            onConfirm={handleLogout}
+            okText="是"
+            cancelText="否"
           >
-            退出登录
-          </Button>
+            <Button type="primary" danger icon={<AiOutlineLogout />}>
+              退出登录
+            </Button>
+          </Popconfirm>
         </Header>
 
         {/* 内容区域 */}
