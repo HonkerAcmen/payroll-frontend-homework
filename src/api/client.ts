@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { ApiResponse } from "@/types/api";
+import { message } from "antd";
 
 export const api = axios.create({
   baseURL: "http://localhost:8080/api", // 后端 API 地址
@@ -7,43 +8,65 @@ export const api = axios.create({
 });
 
 // 自动注入 JWT
-api.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("token");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
+api.interceptors.request.use(
+  (config) => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => {
+    message.error("请求发送失败");
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
-// 响应拦截器：处理统一响应格式和 token 失效
+// 响应拦截器：处理统一响应格式和全局错误
 api.interceptors.response.use(
   (response: AxiosResponse<ApiResponse<unknown>>) => {
-    // 处理统一响应格式 {code, message, data}
+    // 如果返回数据包含 code 字段
     if (
       response.data &&
       typeof response.data === "object" &&
       "code" in response.data
     ) {
-      // 如果 code 不是 "0"，视为错误
-      if (response.data.code !== "0") {
-        return Promise.reject(new Error(response.data.message || "请求失败"));
+      const res = response.data;
+      if (res.code !== "0") {
+        // 优先显示 response.data.error，然后 message
+        message.error(res.message || "请求失败");
+        return Promise.reject(new Error(res.message || "请求失败"));
       }
       // 返回 data 字段
-      return { ...response, data: response.data.data };
+      return { ...response, data: res.data };
     }
     return response;
   },
   (error) => {
+    // 网络错误 / 服务器错误
     if (typeof window !== "undefined") {
-      // 401 未授权，清除 token 并跳转到登录页
-      if (error.response?.status === 401) {
-        localStorage.removeItem("token");
-        // 避免在登录页重复跳转
-        if (window.location.pathname !== "/login") {
-          window.location.href = "/login";
+      if (error.response) {
+        // 401 未授权
+        if (error.response.status === 401) {
+          localStorage.removeItem("token");
+          if (window.location.pathname !== "/login") {
+            window.location.href = "/login";
+          }
+          message.error("登录已过期，请重新登录");
+        } else if (error.response.data?.error) {
+          // 后端返回 error 字段
+          message.error(error.response.data.error);
+        } else {
+          message.error(error.response.data?.message || "服务器响应异常");
         }
+      } else if (error.request) {
+        message.error("请求未发送成功，请检查网络");
+      } else {
+        message.error(error.message || "未知错误");
       }
     }
     return Promise.reject(error);
-  },
+  }
 );
