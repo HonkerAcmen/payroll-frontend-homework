@@ -6,7 +6,7 @@ import {
   useSalaryRecords,
   useTransferRecords,
 } from "@/api/hooks";
-import EmployeeForm from "@/components/EmployeeForm";
+import EmployeeForm from "@/pages/employees/_components/EmployeeForm";
 import { Tabs, Button, Spin, Table, Tag, message } from "antd";
 import { Employee } from "@/types/api";
 import Link from "next/link";

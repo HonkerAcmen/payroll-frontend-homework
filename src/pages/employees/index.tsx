@@ -7,7 +7,7 @@ import { useState, useMemo } from "react";
 import { Table, Input, Select, Button, Modal, Tag, Space, message } from "antd";
 import { Employee } from "@/types/api";
 import { AiFillPlusCircle } from "react-icons/ai";
-import EmployeeForm from "@/components/EmployeeForm";
+import EmployeeForm from "@/pages/employees/_components/EmployeeForm";
 
 const { Option } = Select;
 
@@ -115,7 +115,7 @@ export default function EmployeePage() {
   ];
 
   return (
-    <div className="p-6 bg-gray-100 min-h-190 rounded-2xl">
+    <div className="p-6  min-h-190 ">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-gray-800">员工管理</h1>
         <Button
@@ -174,7 +174,6 @@ export default function EmployeePage() {
         open={isCreateModalOpen}
         onCancel={() => setIsCreateModalOpen(false)}
         footer={null}
-        destroyOnClose
       >
         <EmployeeForm
           onSubmit={handleCreate}

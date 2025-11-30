@@ -42,9 +42,10 @@ export default function Layout({ children }: PropsWithChildren) {
         className="border-r border-gray-200"
       >
         <div
-          className={`flex h-16 items-center justify-center font-bold text-gray-800 text-lg ${
+          className={`flex h-16 items-center justify-center font-bold text-gray-800 text-lg cursor-pointer ${
             collapsed ? "text-xl" : ""
           }`}
+          onClick={() => router.push("/")}
         >
           {collapsed ? "员" : "员工管理"}
         </div>
@@ -82,9 +83,7 @@ export default function Layout({ children }: PropsWithChildren) {
         </Header>
 
         {/* 内容区域 */}
-        <Content className="m-4 rounded-lg bg-white p-6 shadow-sm">
-          {children}
-        </Content>
+        <Content className=" bg-white p-6 shadow-sm">{children}</Content>
 
         {/* 底部 Footer */}
         <Footer

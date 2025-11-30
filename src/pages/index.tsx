@@ -1,8 +1,8 @@
-import { AiFillOpenAI } from "react-icons/ai";
+import { AiFillRocket } from "react-icons/ai";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-start flex-col">
+    <div className="flex  flex-col items-center ">
       <style>{`
         /* 彩虹流动动画 */
         @keyframes rainbow-move {
@@ -26,14 +26,14 @@ export default function Home() {
           -webkit-text-fill-color: transparent;
         }
       `}</style>
-      <AiFillOpenAI size={100} className="text-gray-400 cursor-default" />
+      <AiFillRocket size={100} className="text-gray-400 cursor-default" />
 
       <h1 className="mb-4 text-4xl font-bold rainbow-text cursor-default">
         欢迎使用 员工管理系统
       </h1>
 
       <p className="mb-8 text-gray-600 cursor-default">
-        请在右上角选择功能以继续
+        请在侧边栏选择功能以继续
       </p>
     </div>
   );
