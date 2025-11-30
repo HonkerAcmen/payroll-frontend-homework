@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Layout from "../components/Layout";
+import Layout from "./_components/Layout";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { isAuthenticated } from "@/lib/auth";

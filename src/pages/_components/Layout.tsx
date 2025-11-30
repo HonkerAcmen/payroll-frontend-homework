@@ -8,6 +8,8 @@ import {
   AiOutlineLogout,
   AiOutlineMenuFold,
   AiOutlineMenuUnfold,
+  AiFillHome,
+  AiFillSmile,
 } from "react-icons/ai";
 import { removeToken } from "@/lib/auth";
 
@@ -45,7 +47,14 @@ export default function Layout({ children }: PropsWithChildren) {
           }`}
           onClick={() => router.push("/")}
         >
-          {collapsed ? "员" : "员工管理"}
+          {collapsed ? (
+            <AiFillHome />
+          ) : (
+            <div className="flex items-center justify-center">
+              <AiFillSmile />
+              员工管理系统
+            </div>
+          )}
         </div>
         <Menu
           mode="inline"

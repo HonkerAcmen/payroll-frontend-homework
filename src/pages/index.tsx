@@ -1,4 +1,4 @@
-import { AiFillRocket } from "react-icons/ai";
+import { AiFillHome, AiFillRocket } from "react-icons/ai";
 
 export default function Home() {
   return (
@@ -26,7 +26,7 @@ export default function Home() {
           -webkit-text-fill-color: transparent;
         }
       `}</style>
-      <AiFillRocket size={100} className="text-gray-400 cursor-default" />
+      <AiFillHome size={100} className="text-gray-400 cursor-default" />
 
       <h1 className="mb-4 text-4xl font-bold rainbow-text cursor-default">
         欢迎使用 员工管理系统

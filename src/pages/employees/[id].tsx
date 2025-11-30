@@ -21,10 +21,13 @@ export default function EmployeeDetailPage() {
 
   const { data: employee, isLoading: employeeLoading } =
     useEmployee(employeeId);
+
   const { data: salaryRecords, isLoading: salaryLoading } =
     useSalaryRecords(employeeId);
+
   const { data: transferRecords, isLoading: transferLoading } =
     useTransferRecords(employeeId);
+
   const update = useUpdateEmployee();
 
   const handleUpdate = async (formData: Partial<Employee>) => {
@@ -103,27 +106,29 @@ export default function EmployeeDetailPage() {
   ];
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen space-y-4">
+    <div className="p-6  min-h-screen space-y-4">
       {/* 返回按钮和标题 */}
       <div className="flex justify-between items-center mb-4">
         <Link href="/employees">
           <Button icon={<AiOutlineArrowLeft />}>返回员工列表</Button>
         </Link>
-        <h1 className="text-2xl font-bold">{employee.name} - 员工详情</h1>
-        <div></div>
+        <h1 className="text-2xl font-bold text-gray-800">
+          {employee.name}的详细信息
+        </h1>
       </div>
 
       {/* 基本信息 / 编辑表单 */}
-      <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="bg-white p-6 rounded-lg border border-gray-200">
         {isEditing ? (
           <EmployeeForm
             employee={employee}
             onSubmit={handleUpdate}
             onCancel={() => setIsEditing(false)}
             isLoading={update.isPending}
+            isEdit
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-600">
             <div>
               <b>ID:</b> {employee.id}
             </div>
@@ -143,7 +148,9 @@ export default function EmployeeDetailPage() {
               </span>
             </div>
             <div>
-              <b>入职日期:</b> {employee.created_at}
+              <b>入职日期:</b>{" "}
+              {employee.created_at &&
+                new Date(employee.created_at).toISOString().slice(0, 10)}
             </div>
             <div className="md:col-span-2">
               <Button
