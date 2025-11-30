@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.11",
+    "antd": "^6.0.0",
     "axios": "^1.13.2",
+    "dayjs": "^1.11.19",
     "next": "16.0.5",
     "prettier": "3.7.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
