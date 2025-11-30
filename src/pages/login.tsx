@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLogin } from "@/api/hooks";
 import { useRouter } from "next/router";
+import { AiFillThunderbolt } from "react-icons/ai";
 
 export default function Login() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function Login() {
     try {
       setError("");
       await login.mutateAsync(form);
-      router.push("/employees");
+      router.push("/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.response?.data?.message || "登录失败，请检查用户名和密码");
@@ -31,7 +32,7 @@ export default function Login() {
       <div className="w-full max-w-md rounded-2xl border border-gray-100 bg-white p-8 shadow-2xl">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
-            <span className="text-2xl font-bold text-white">员工管理</span>
+            <AiFillThunderbolt size={100} className="text-white" />
           </div>
           <h1 className="mb-2 text-2xl font-bold text-gray-800">
             员工管理系统
