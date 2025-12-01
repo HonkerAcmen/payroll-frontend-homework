@@ -35,6 +35,7 @@ export default function Modal({
 
   return (
     <div
+      data-testid="modal-backdrop"
       className="bg-gray-300/50% bg-opacity-50 animate-fadeIn fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
       onClick={onClose}
     >

@@ -43,6 +43,7 @@ export default function Layout({ children }: PropsWithChildren) {
         className="border-r border-gray-200"
       >
         <div
+          data-testid="sidebar-logo"
           className={`flex h-16 items-center justify-center font-bold text-gray-800 text-lg cursor-pointer ${
             collapsed ? "text-xl" : ""
           }`}
@@ -77,6 +78,7 @@ export default function Layout({ children }: PropsWithChildren) {
         >
           <Button
             type="text"
+            aria-label="toggle-sider"
             onClick={() => setCollapsed(!collapsed)}
             icon={collapsed ? <AiOutlineMenuUnfold /> : <AiOutlineMenuFold />}
           />
