@@ -274,8 +274,13 @@ export const useDeptStats = (year: number, month: number) => {
       const res = await api.get<any[]>("/stats/dept", {
         params: { year, month },
       });
+      const items = Array.isArray(res.data)
+        ? res.data
+        : Array.isArray((res.data as any)?.data)
+          ? (res.data as any).data
+          : [];
       // 转换字段名
-      return res.data.map((item: any) => ({
+      return items.map((item: any) => ({
         department: item.Department || item.department,
         total_gross: item.TotalGross ?? item.total_gross ?? 0,
         total_net: item.TotalNet ?? item.total_net ?? 0,
