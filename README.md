@@ -5,7 +5,7 @@
 ## 📋 项目简介
 
 本系统是一个全栈的工资管理系统，前端采用 Next.js 16 + React 19 + TypeScript 构建，UI 使用 Ant Design 组件库，数据可视化使用 ECharts。系统提供了完整的员工信息管理、工资记录管理、数据统计分析和报表导出等功能。
-
+后端地址：[https://github.com/HonkerAcmen/payroll-backend-homework]
 ## ✨ 主要功能
 
 ### 1. 员工管理
